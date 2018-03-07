@@ -22,7 +22,7 @@ while True:
 
 import re
 import bs4
-import queue
+#import piqueue
 import json
 import sys
 import csv
@@ -31,7 +31,7 @@ import util
 import os.path
 import datetime
 from os.path import join as pjoin
-import schedule
+#import schedule
 import time
 from crontab import CronTab
 import zipfile
@@ -39,6 +39,7 @@ from os import listdir
 from os.path import isfile, join
 import geopandas as gpd
 import pandas as pd
+import urllib.parse
 #sudo -H pip3 install schedule
 
 
@@ -50,7 +51,8 @@ near-real-time/firms/active-fire-data"
 formats = ["MODIS24h", "MODIS48h", "MODIS7d","VIIRS24h", "VIIRS48h", "VIIRS7d"]
 
 final_directory = '/home/student/capp30122-win-18-jorgequintero/fire_project/downloads'
-    
+
+
 
 def build_soup(website):
     '''
@@ -63,6 +65,7 @@ def build_soup(website):
         Soup object.
     '''
 
+    #the util.py file came from PA2. We didnt change anything in it
     sitio = util.get_request(website)
     siitio = util.read_request(sitio)
     soup = bs4.BeautifulSoup(siitio, "html5lib")
