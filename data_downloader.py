@@ -50,7 +50,8 @@ near-real-time/firms/active-fire-data"
 
 formats = ["MODIS24h", "MODIS48h", "MODIS7d","VIIRS24h", "VIIRS48h", "VIIRS7d"]
 
-final_directory = '/home/student/capp30122-win-18-jorgequintero/fire_project/downloads'
+#final_directory = '/home/student/capp30122-win-18-jorgequintero/fire_project/downloads'
+final_directory = '/home/student/Fire-database/Files'
 
 
 
