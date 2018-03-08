@@ -65,7 +65,8 @@ def build_soup(website):
         Soup object.
     '''
 
-    #the util.py file came from PA2. We didnt change anything in it
+    #the util.py file was given to us in PA2. 
+    #We didnt change anything in it
     sitio = util.get_request(website)
     siitio = util.read_request(sitio)
     soup = bs4.BeautifulSoup(siitio, "html5lib")
@@ -122,6 +123,12 @@ def soup_to_links(soup):
 
 
 def zipper(directory):
+    '''
+    This function takes all the zipped files in a directory
+    and unzippes them.
+
+    Input: directory
+    '''
     for file_ in listdir(directory):
         path_to_file = pjoin(directory, "{t}".format(t = file_))      
         if path_to_file.endswith(".zip"):
@@ -161,6 +168,7 @@ def appender():
             dic[f + c] = [archive_name, fire_name]             
 
     count = 0
+    #Lucia Delgado provided to the gpd. functionts
     for key in dic:
         file_a =  gpd.read_file(dic[key][0])         
         file_b =  gpd.read_file(dic[key][1])         
@@ -200,6 +208,8 @@ def go():
 
     #File download. 
     for key in dict_links:
+        #Most of the times there are simply no fires in alaska. 
+        #when that happens, the zip is empty and creates a mess
         if key != "Alaska":
             for i in formats_:
                 target_file = dict_links[key][i]

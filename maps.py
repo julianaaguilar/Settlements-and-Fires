@@ -28,6 +28,7 @@ import cartopy.io.shapereader as shpreader
 import folium
 import os
 from pathlib import Path
+import data_downloader
 
 
 '''
@@ -127,8 +128,12 @@ def get_points (country, start_date, end_date, confidence,
 	#modis = "nasa_data/region/MODIS_C6_Central_America_7d.shp"
 	#viirs = "nasa_data/region/VNP14IMGTDL_NRT_Central_America_7d.shp"
 
-	modis = "nasa_data/southamerica/MODIS_C6_South_America_7d.shp"
-	viirs = "nasa_data/southamerica/VNP14IMGTDL_NRT_South_America_7d.shp"
+
+	modis = data_downloader.selector(region, "MODIS")
+	#modis = "nasa_data/southamerica/MODIS_C6_South_America_7d.shp"
+	
+	viirs =  data_downloader.selector(region, "VIIRS")
+	#viirs = "nasa_data/southamerica/VNP14IMGTDL_NRT_South_America_7d.shp"
 
 	#3. Combine shapefiles
 	mv =  combine_shapefiles(modis, viirs)
