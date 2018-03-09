@@ -4,9 +4,8 @@ from django.urls import reverse
 from django.views import generic
 #from django.views import View
 
-from . import maps_maker
-from map_maker import draw_map
-
+#from . import maps_maker
+from . import toy_func
 
 class IndexView(generic.View):
     template_name = 'fire_maps/index.html'
@@ -17,6 +16,8 @@ class IndexView(generic.View):
 
     def post(self, response):
         country = response.POST["country"]
-        html_ = maps_maker.draw_map(country, "2018-02-26", "2018-03-03", "normal")
-        return HttpResponse(country)
+        #html_ = maps_maker.draw_map(country, "2018-02-26", "2018-03-03", "normal")
+        #return HttpResponse(html_)
+        h = toy_func.hola(country)
+        return HttpResponse(h)
 

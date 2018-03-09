@@ -17,6 +17,6 @@ from django.urls import include, path
 from django.contrib import admin
 
 urlpatterns = [
-    path('fire_maps/', include('fire_maps.urls')),
-    path('admin/', admin.site.urls),
+    path('', include('fire_maps.urls')),
+    #path('admin/', admin.site.urls),
 ]
