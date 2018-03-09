@@ -78,16 +78,18 @@ def draw_map (country, start_date, end_date, confidence):
 	# Get location
 	#NOTE: we need a dictionaty to map country to location
 	location = get_coordinates(country)
+	
 	#Location for Colombia
-	location = [4.60971, -74.08175]
+	#location = [4.60971, -74.08175]
 
 
 	#Features added
-	outmap = folium.Map(location = location, zoom_start = 7)
+	outmap = folium.Map(location = location, zoom_start = 4)
 	for i in range(len(df)):                                              
 		lat = df.iat[i,9]  
 		lon = df.iat[i,10] 
-		folium.CircleMarker(radius=5, location=[lat, lon],
+		info = "Date: " + str(df.iat[i,2]) + " Time: "  + str(df.iat[i,2])
+		folium.CircleMarker(radius=5, location=[lat, lon], popup = info,
 			fill_color='salmon', color='red',
 			fill_opacity=0.8, line_opacity=0.8).add_to(outmap)
 
@@ -257,7 +259,7 @@ def country_to_region(country):
 	 'Chad': 'North and Central Africa',
 	 'Chile': 'South America',
 	 'China': 'South Asia',
-	 'Colombia': 'Central America',
+	 'Colombia': 'South America',
 	 'Costa Rica': 'Central America',
 	 'Croatia': 'Europe',
 	 'Cuba': 'Central America',
