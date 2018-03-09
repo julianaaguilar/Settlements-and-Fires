@@ -1,0 +1,14 @@
+<h1>Fire Tracking</h1>
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<form action="{% url 'fire_maps:index' %}" method="post">
+{% csrf_token %}
+<select name="country">
+<!--base de datos sqlite-->
+{% for country in countries %}
+	<option value="{{country}}">{{country}}</option>
+{% endfor %}
+</select> 
+<input type="submit" value="Give me my map!" />
+</form>
