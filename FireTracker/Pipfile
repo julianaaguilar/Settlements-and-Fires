@@ -1,0 +1,31 @@
+[[source]]
+
+verify_ssl = true
+name = "pypi"
+url = "https://pypi.python.org/simple"
+
+
+[requires]
+
+python_version = "3.5"
+
+
+[packages]
+
+flask = "*"
+rtree = "*"
+fiona = "*"
+geopandas = "*"
+matplotlib = "*"
+pyshp = "*"
+pandas = "*"
+cartopy = "*"
+folium = "*"
+pathlib = "*"
+rasterio = "==1.0a12"
+cython = "*"
+numpy = "*"
+
+
+[dev-packages]
+

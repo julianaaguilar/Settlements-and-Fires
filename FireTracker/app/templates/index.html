@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+{% block title %}
+	Fire Tracker
+{% endblock %}
+
+{% block body %}
+	<h2> Fires </h2>
+	<form action="map" method="get">
+
+	<div class="styled-select slate">	
+	<select name="country">
+	<!--base de datos sqlite-->
+	<option value="" selected="selected" disabled="disabled">--Country--</option>
+	{% for country in countries %}
+		<option value="{{country}}">{{country}}</option>
+	{% endfor %}
+	</select> 
+	<select name="intensity">
+	<option value="" selected="selected" disabled="disabled">--Fire intensity--</option>
+	{% for intensity in intensities %}
+		<option value="{{intensity}}">{{intensity}}</option>
+	{% endfor %}
+	</select> 
+	<input type="date" name="from_date"  min="2018-02-01"/>
+	<input type="date" name="to_date" min="2018-02-01" />
+	<input type="submit" value="Show map!"/>
+	</form>
+	<form action="ghsl_map">
+	<h2>Fires and Settlements</h2>
+	<div class="styled-select slate">	
+	<select name="country">
+	<!--base de datos sqlite-->
+	<option value="" selected="selected" disabled="disabled">--Country--</option>
+	{% for country in ghsl_countries %}
+		<option value="{{country}}">{{country}}</option>
+	{% endfor %}
+	</select> 
+	<select name="intensity">
+	<option value="" selected="selected" disabled="disabled">--Fire intensity--</option>
+	{% for intensity in intensities %}
+		<option value="{{intensity}}">{{intensity}}</option>
+	{% endfor %}
+	</select> 
+	<input type="date" name="from_date"  min="2018-02-01"/>
+	<input type="date" name="to_date" min="2018-02-01" />
+	<input type="submit" value="Show map!"/>
+	</form>
+{% endblock %}
