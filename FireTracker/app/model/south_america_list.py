@@ -1,0 +1,10 @@
+['Argentina',
+ 'Bolivia',
+ 'Brazil',
+ 'Chile',
+ 'Colombia',
+ 'Ecuador',
+ 'Paraguay',
+ 'Peru',
+ 'Suriname',
+ 'Uruguay']

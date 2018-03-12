@@ -76,12 +76,7 @@ def draw_map (country, start_date, end_date, confidence):
 	geojson = r'output.geojson'
 
 	# Get location
-	#NOTE: we need a dictionaty to map country to location
 	location = get_coordinates(country)
-	
-	#Location for Colombia
-	#location = [4.60971, -74.08175]
-
 
 	#Features added
 	outmap = folium.Map(location = location, zoom_start = 4)
@@ -92,20 +87,10 @@ def draw_map (country, start_date, end_date, confidence):
 		folium.CircleMarker(radius=5, location=[lat, lon], popup = info,
 			fill_color='salmon', color='red',
 			fill_opacity=0.8, line_opacity=0.8).add_to(outmap)
-
-	outmap.save(outfile='outmap.html') 
-	return outmap
-
-	'''
-	#Add features practice
-	map3 = folium.Map(location = location, zoom_start = 7)
-
-	folium.CircleMarker(radius=3, location=[4.50642, -69.53278], 
-	fill_color='salmon', color='red',
-	fill_opacity=0.8, line_opacity=0.8).add_to(map3)
-	map3.save(outfile='map3.html') 
-	''' 
-
+	# hola juli: change path
+	name = "home/student/Fire-database/FireTracker/app/maps" + country + ".html"
+	outmap.save(outfile=name) 
+	return name
 
 
 def get_points (country, start_date, end_date, confidence, 
@@ -136,15 +121,13 @@ def get_points (country, start_date, end_date, confidence,
 	There will be two shapefiles per region
 	A dictionary matchin region to modis and viirs file
 	'''
-	#modis = "nasa_data/region/MODIS_C6_Central_America_7d.shp"
-	#viirs = "nasa_data/region/VNP14IMGTDL_NRT_Central_America_7d.shp"
 
+	#modis = data_downloader.selector(region, "MODIS")	
+	#viirs =  data_downloader.selector(region, "VIIRS")
 
-	modis = data_downloader.selector(region, "MODIS")
-	#modis = "nasa_data/southamerica/MODIS_C6_South_America_7d.shp"
-	
-	viirs =  data_downloader.selector(region, "VIIRS")
-	#viirs = "nasa_data/southamerica/VNP14IMGTDL_NRT_South_America_7d.shp"
+	modis = "data/fires_regions/MODIS_C6_South_America_archive.shp"
+	viirs = "data/fires_regions/VNP14IMGTDL_NRT_South_America_archive.shp"
+
 
 	#3. Combine shapefiles
 	mv =  combine_shapefiles(modis, viirs)
@@ -188,13 +171,7 @@ def combine_shapefiles(modis, viirs):
 		viirs: string
 	Returs: geopandas dataframe
 	'''
-	# READ FILES
-	#modis = "nasa_data/MODIS_C6_Global_7d.shp"
-	#viirs = "nasa_data/VNP14IMGTDL_NRT_Global_7d.shp"
-
-	#modis = "nasa_data/region/MODIS_C6_Central_America_7d.shp"
-	#viirs = "nasa_data/region/VNP14IMGTDL_NRT_Central_America_7d.shp"
-				
+	
 	m = gpd.read_file(modis)
 	v = gpd.read_file(viirs)
 
@@ -728,5 +705,3 @@ def get_coordinates(country):
 	}
 
 	return coordinates[country]
-#http://scitools.org.uk/cartopy/docs/v0.15/matplotlib/intro.html
-#https://automating-gis-processes.github.io/2016/Lesson3-spatial-join.html
