@@ -1,3 +1,52 @@
+# Project
+FIRE TRACKING
+
+Team: JULIANA AGUILAR, LUCIA DELGADO AND JORGE QUINTERO
+
+Objectives and description: 
+● Provide an interactive platform that allows fire tracking around
+the globe with updated information.
+● Identify fires that are within a certain radius of human
+settlements.
+
+For further understanding open "Tracking fires worldwide.pdf", it contains the main information about the project.  
+
+
+# Data
+1. Fires worldwide
+We use fire points identified by NASA using satelite images
+from two satelites: Modis and Viirs.
+
+Data obtained from 
+https://earthdata.nasa.gov/earth-observation-data
+/near-real-time/firms/active-fire-data
+
+2. Settlements
+We use Global Human Settlement Layers (GHSL). These data contain an information layer on built-up 
+presence as derived by the ad-hoc Landsat 8 collection 2013/2014. 
+
+Downloaded from: 
+   http://cidportal.jrc.ec.europa.eu/ftp/jrc-opendata/GHSL/GHS_BUILT_LDSMT_GLOBE_R2015B/GHS_BUILT_LDS2014_GLOBE_R2016A_54009_250/
+
+Resolution: 250m of resolution
+Year: 2014
+
+
+# What you should know about the files
+The files we use in this project are heavy, and can't be uploaded to github.
+
+We put a small sample in github, but the complete set of files can be downloaded from this link:
+
+
+# Running the web-pag: Instructions
+1. Change your directory to "/Fire-database/Firetracker/" 
+2. Install pipenv using
+2. Run $ pipenv install
+3. Run $ FLASK_APP=run.py pipenv run flask run
+4. Open your favourite browser and go to the path indicated by the python console
+
+
+
 # Fires_database
 
 The Following Libraries are Needed:
