@@ -1,8 +1,17 @@
-# FIRE TRACKING
-# Process GHSL Rasters
-# Juliana Aguilar, Lucía Delgado, Jorge Quintero
+# Project: FIRE TRACKING
+# Task: PROCESS GHSL RASTERS
+# Team: JULIANA AGUILAR, LUCIA DELGADO AND JORGE QUINTERO
 
 '''
+MAIN OUTPUTS
+- Clips GHSL raster at the country level
+- Saves clip
+- Saves image
+'''
+
+'''
+THE DATA 
+
 GHSL - Global Human Settlement Layers 
 
 Downloaded from: 
@@ -20,15 +29,12 @@ Projection: World Mollweide (EPSG:54009)
 '''
 
 '''
+MAIN SOURCES OF CODE
 https://mapbox.github.io/rasterio/intro.html
 served as main source for this code 
 '''
-'''
-Main outputs from this code:
-- Clips GHSL raster at the country level
-- Saves clip
-- Saves image
-'''
+
+
 import rasterio
 from rasterio.plot import show
 from rasterio.mask import mask
@@ -47,12 +53,49 @@ import numpy as np
 
 import os
 import math
+from pathlib import Path
 
+ROOT = str(Path(__file__).parents[1])
+FILEPATH_O = os.path.join(ROOT,"data/GHSL")
+FILEPATH_S = os.path.join(ROOT, "data/outfiles")
+FILEPATH_W = os.path.join(ROOT, "maps")
 
-FILEPATH_O = "/home/student/Fire-database/FireTracker/data/GHSL"
-FILEPATH_S = "/home/student/Fire-database/FireTracker/data/outfiles"
-FILEPATH_W = "/home/student/Fire-database/FireTracker/app/maps"
+def ghsl_country(country):
+	'''
+	Clips GHSL raster to country shape and prints.
+	Inputs:
+		country (str): country name
 
+	Return: WSG84 bounds of image	
+	'''
+	# Shp with country boundaries and reproject to raster's projection
+	country_shp = country_boundariesWSG84(country)
+
+	# Get filename
+	#filen = country_shp.iloc[0]["CONTINENT"]
+
+	# Changessss depending on country/ras
+	#file_in = filen + "_GHSL.tif"
+	file_in = "GHSL_Globe.tif"
+	file_out = country + "_ghsl.tif"
+	file_out_png = country + "_ghsl.png"
+
+	# Read raster
+	file_ras = os.path.join(FILEPATH_O, file_in)
+	out_ras = os.path.join(FILEPATH_S, file_out)
+	out_png = os.path.join(FILEPATH_W, file_out_png)
+	
+	# Clip raster to country
+	mosaic = rasterio.open(file_ras)
+	out_ras = clipping(mosaic, country_shp, out_ras)
+
+	# Print and export bounds
+	map_c = rasterio.open(out_ras)
+	bounds = boundsWSG84(map_c)
+
+	print_ras(map_c, out_png)
+
+	return (bounds, out_png)
  
 def country_boundariesWSG84(country):
 	'''
@@ -87,7 +130,8 @@ def getFeatures(gdf):
 
 def boundsWSG84(map_c, dst_crs='EPSG:4326'):
 	'''
-	Reprojects raster data and save raster.
+	Calculate bounds of projected image.
+	Not in use.
 
 	Inputs: 
 		map_c: (rasterio._io.RasterReader) origin raster opened with rasterio
@@ -152,38 +196,4 @@ def print_ras(map_c, out_png):
 	pyplot.savefig(out_png, bbox_inches='tight', transparent=True, dpi=150)
 
 
-def ghsl_country(country):
-	'''
-	Clips GHSL raster to country shape and prints.
-	Inputs:
-		country (str): country name
 
-	Return: WSG84 bounds of image	
-	'''
-	# Shp with country boundaries and reproject to raster's projection
-	country_shp = country_boundariesWSG84(country)
-
-	# Get filename
-	filen = country_shp.iloc[0]["CONTINENT"]
-
-	# Changessss depending on country/ras
-	file_in = filen + "_GHSL.tif"
-	file_out = country + "_ghsl.tif"
-	file_out_png = country + "_ghsl.png"
-
-	# Read raster
-	file_ras = os.path.join(FILEPATH_O, file_in)
-	out_ras = os.path.join(FILEPATH_S, file_out)
-	out_png = os.path.join(FILEPATH_W, file_out_png)
-	
-	# Clip raster to country
-	mosaic = rasterio.open(file_ras)
-	out_ras = clipping(mosaic, country_shp, out_ras)
-
-	# Print and export bounds
-	map_c = rasterio.open(out_ras)
-	bounds = boundsWSG84(map_c)
-
-	print_ras(map_c, out_png)
-
-	return (bounds, out_png)

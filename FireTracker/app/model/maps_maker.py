@@ -1,16 +1,36 @@
-# TASK: Fire Data to Output
-# Fire Tracker Team
-# Lucia Delgado
-# Last modified: March 8, 2018 
+# Project: FIRE TRACKING
+# Task: PROCESS FIRE DATA AND PRODUCE DYNAMIC MAP
+# Team: JULIANA AGUILAR, LUCIA DELGADO AND JORGE QUINTERO
 
 '''
-GOAL OF THIS CODE:
+MAIN OUTPUTS:
+- Shapefile with fires at the country level
+- HTML Map
+'''
+'''
+THE DATA:
 
-Provided: country, date_frame and confidence
+We use fire points identified by NASA using satelite images
+from two satelites: Modis and Viirs.
 
-Generate:
-	Shapefile
-	HTML Map
+Data obtained from 
+https://earthdata.nasa.gov/earth-observation-data
+/near-real-time/firms/active-fire-data
+
+A data base for each region can be updated dayly using data_downloader.py 
+
+Format: ESRI Shapefile
+Projection: WGS84, (EPSG:4326)
+'''
+'''
+STEPS:
+1. Find region of country
+2. Merge info from two satelites
+3. Select info for country
+4. Select dates
+5. Select quality
+6. Generate file
+7. Generate Map
 '''
 
 import rtree
@@ -24,34 +44,13 @@ import cartopy.io.shapereader as shpreader
 import folium
 import os
 from pathlib import Path
-import data_downloader
+from . import data_downloader
+#import data_downloader
+from pathlib import Path
 
+ROOT = Path(__file__).parents[1]
+OUT_GEOJSON = os.path.join(str(ROOT), "data/outfiles/output.geojson")
 
-'''
-NOTE ON FIRE DATA:
-
-*We use fire points identified by NASA using satelite images
-from two satelites: Modis and Viirs.
-
-*Geographic WGS84 projection
-
-*Data obtained from 
-https://earthdata.nasa.gov/earth-observation-data
-/near-real-time/firms/active-fire-data
-
-*A data base for each region is being updated dayly. 
-'''
-
-'''
-STEPS:
-1. Find region of country
-2. Merge info from two satelites
-3. Select info for country
-4. Select dates
-5. Select quality
-6. Generate file
-7. Generate Map
-'''
 
 def draw_map (country, start_date, end_date, confidence):
 	'''
@@ -66,14 +65,18 @@ def draw_map (country, start_date, end_date, confidence):
 		
 	Returns: HTML Map
 	'''
+	name_ = "maps/" + country + ".html"
+	name = os.path.join(str(ROOT), name_)
+	
+	print(OUT_GEOJSON)
 
 	#Generate file with the plots that we want to draw
 	get_points(country, start_date, end_date, confidence, 
-	save = True, file_name = "output.geojson")
+	save = True, file_name = OUT_GEOJSON)
 
 	# Call data
-	df = gpd.read_file('output.geojson') 
-	geojson = r'output.geojson'
+	df = gpd.read_file(OUT_GEOJSON) 
+	geojson = OUT_GEOJSON
 
 	# Get location
 	location = get_coordinates(country)
@@ -87,14 +90,13 @@ def draw_map (country, start_date, end_date, confidence):
 		folium.CircleMarker(radius=5, location=[lat, lon], popup = info,
 			fill_color='salmon', color='red',
 			fill_opacity=0.8, line_opacity=0.8).add_to(outmap)
-	# hola juli: change path
-	name = "home/student/Fire-database/FireTracker/app/maps" + country + ".html"
+	
 	outmap.save(outfile=name) 
 	return name
 
 
 def get_points (country, start_date, end_date, confidence, 
-	save = False, file_name = "output.geojson"):
+	save = True, file_name = OUT_GEOJSON):
 	'''
 	This function gets a country and a time frame, 
 	and returs a GeoDataFrame with the fire data
@@ -115,9 +117,6 @@ def get_points (country, start_date, end_date, confidence,
 
 	#2. Get files
 	'''
-	For this part we need to match each region to file
-	Check with Jorge
-
 	There will be two shapefiles per region
 	A dictionary matchin region to modis and viirs file
 	'''
@@ -125,12 +124,13 @@ def get_points (country, start_date, end_date, confidence,
 	#modis = data_downloader.selector(region, "MODIS")	
 	#viirs =  data_downloader.selector(region, "VIIRS")
 
-	modis = "data/fires_regions/MODIS_C6_South_America_archive.shp"
-	viirs = "data/fires_regions/VNP14IMGTDL_NRT_South_America_archive.shp"
+	modis = os.path.join(str(ROOT), "data/fires_regions/MODIS_C6_South_America_archive.shp")
+	viirs = os.path.join(str(ROOT),"data/fires_regions/VNP14IMGTDL_NRT_South_America_archive.shp")
 
 
 	#3. Combine shapefiles
 	mv =  combine_shapefiles(modis, viirs)
+
 
 	#4. Filter by country
 	country_points = clip_fire_country(country, mv)
@@ -145,6 +145,7 @@ def get_points (country, start_date, end_date, confidence,
 		str(val))
 	filter_confidence = country_time.CONFIDENCE == confidence 
 	country_filtered = country_time[filter_confidence]
+	
 
 	if len(country_filtered) == 0:
 		return "No data matching this request"
@@ -452,7 +453,7 @@ def get_coordinates(country):
 	This dictionary maps all countries to center coordinates. 
 	Latitude and Longiture
 
-	Sourece: 
+	Source: 
 	https://developers.google.com/public-data/docs/canonical/countries_csv
 	'''
 

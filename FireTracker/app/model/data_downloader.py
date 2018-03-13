@@ -1,14 +1,29 @@
-''' Fire Tracking Team
+# Project: FIRE TRACKING
+# Task: AUTOMATIZED DOWNLOAD OF FIRE DATASETS
+# Team: JULIANA AGUILAR, LUCIA DELGADO AND JORGE QUINTERO
 
-This file contains a functions that download fire shapefiles.
+'''
+MAIN OUTPUTS:
+- Shapefile with fires at the country level
+- HTML Map
+'''
+'''
+THE DATA:
 
-Project team members:
+We use fire points identified by NASA using satelite images
+from two satelites: Modis and Viirs.
 
-    Juliana Aguilar
-    Lucia Delgado
-    Jorge Quintero
+Data obtained from 
+https://earthdata.nasa.gov/earth-observation-data
+/near-real-time/firms/active-fire-data
 
+A data base for each region can be updated dayly using data_downloader.py 
 
+Format: ESRI Shapefile
+Projection: WGS84
+'''
+'''
+INSTRUCTIONS:
 To run this function on a schedule, load scraping.py into ipython and
 paste the following code:
 
@@ -16,8 +31,6 @@ schedule.every().day.at("4:30").do(scraping.go)
 while True:
     schedule.run_pending()
     time.sleep(1)
-
-
 '''
 
 import re
@@ -27,7 +40,8 @@ import json
 import sys
 import csv
 import urllib
-import util
+from . import util
+#import util
 import os.path
 import datetime
 from os.path import join as pjoin
@@ -41,8 +55,7 @@ import geopandas as gpd
 import pandas as pd
 import urllib.parse
 #sudo -H pip3 install schedule
-
-
+from pathlib import Path
 
 
 website = "https://earthdata.nasa.gov/earth-observation-data/\
@@ -51,8 +64,9 @@ near-real-time/firms/active-fire-data"
 formats = ["MODIS24h", "MODIS48h", "MODIS7d","VIIRS24h", "VIIRS48h", "VIIRS7d"]
 
 #final_directory = '/home/student/capp30122-win-18-jorgequintero/fire_project/downloads'
-final_directory = '/home/student/Fire-database/Files'
 
+ROOT = Path(__file__).parents[1]
+final_directory = os.path.join(str(ROOT), "data/fires_regions/")
 
 
 def build_soup(website):
