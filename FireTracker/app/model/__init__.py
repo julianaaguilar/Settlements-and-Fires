@@ -1,3 +1,7 @@
+# Project: FIRE TRACKING
+# Task: PROCESSES APPLICATION
+# Team: JULIANA AGUILAR, LUCIA DELGADO AND JORGE QUINTERO
+
 from .maps_maker import draw_map
 from .raster_ghsl import ghsl_country
 from .maps_maker_settle import fire_settle

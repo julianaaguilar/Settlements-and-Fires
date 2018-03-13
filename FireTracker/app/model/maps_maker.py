@@ -23,6 +23,23 @@ Format: ESRI Shapefile
 Projection: WGS84, (EPSG:4326)
 '''
 '''
+SOURCES:
+
+The following sources where helpful to generate this code. 
+The sources consulted were used to understand which libraries to use
+and which commands are useful for each required task.
+
+https://automating-gis-processes.github.io/2016/Lesson1-Intro-Python-GIS.html
+https://python-graph-gallery.com/288-map-background-with-folium/
+http://www.datadependence.com/2016/06/creating-map-visualisations-in-python/
+https://matplotlib.org/basemap/users/examples.html
+https://folium.readthedocs.io/en/latest/
+https://folium.readthedocs.io/en/latest/quickstart.html
+http://scitools.org.uk/cartopy/docs/v0.15/matplotlib/intro.html
+https://automating-gis-processes.github.io/2016/Lesson3-spatial-join.html
+'''
+
+'''
 STEPS:
 1. Find region of country
 2. Merge info from two satelites
@@ -49,8 +66,8 @@ from . import data_downloader
 #import data_downloader
 from pathlib import Path
 
-ROOT = Path(__file__).parents[1]
-OUT_GEOJSON = os.path.join(str(ROOT), "data/outfiles/output.geojson")
+ROOT = str(Path(__file__).parents[1])
+OUT_GEOJSON = os.path.join(ROOT, "data/outfiles/output.geojson")
 # Lu, usa este nombre para guardar el html vacío
 EMPTY_HTML = os.path.join(str(ROOT), "maps/emptysearch.html")
 
@@ -69,30 +86,32 @@ def draw_map (country, start_date, end_date, confidence):
 	Returns: HTML Map
 	'''
 	name_ = "maps/" + country + ".html"
-	name = os.path.join(str(ROOT), name_)
-	
-	print(OUT_GEOJSON)
+	name = os.path.join(ROOT, name_)
 
-	#Generate file with the plots that we want to draw
-	get_points(country, start_date, end_date, confidence, 
-	save = True, file_name = OUT_GEOJSON)
+	if os.path.isfile(OUT_GEOJSON) == False:
+		outmap = folium.Map(location = location, zoom_start = 7)
 
-	# Call data
-	df = gpd.read_file(OUT_GEOJSON) 
-	geojson = OUT_GEOJSON
+	else: 
+		#Generate file with the plots that we want to draw
+		points = get_points(country, start_date, end_date, confidence, 
+		save = True, file_name = OUT_GEOJSON)
 
-	# Get location
-	location = get_coordinates(country)
+		# Call data
+		df = gpd.read_file(OUT_GEOJSON) 
+		geojson = OUT_GEOJSON
 
-	#Features added
-	outmap = folium.Map(location = location, zoom_start = 4)
-	for i in range(len(df)):                                              
-		lat = df.iat[i,9]  
-		lon = df.iat[i,10] 
-		info = "Date: " + str(df.iat[i,2]) + " Time: "  + str(df.iat[i,2])
-		folium.CircleMarker(radius=5, location=[lat, lon], popup = info,
-			fill_color='salmon', color='red',
-			fill_opacity=0.8, line_opacity=0.8).add_to(outmap)
+		# Get location
+		location = get_coordinates(country)
+
+		#Features added
+		outmap = folium.Map(location = location, zoom_start = 4)
+		for i in range(len(df)):                                              
+			lat = df.iat[i,9]  
+			lon = df.iat[i,10] 
+			info = "Date: " + str(df.iat[i,2]) + " Time: "  + str(df.iat[i,2])
+			folium.CircleMarker(radius=5, location=[lat, lon], popup = info,
+				fill_color='salmon', color='red',
+				fill_opacity=0.8, line_opacity=0.8).add_to(outmap)
 	
 	outmap.save(outfile=name) 
 	return name
@@ -114,7 +133,10 @@ def get_points (country, start_date, end_date, confidence,
 		file_name: string
 	Returns geopandas data frame
 	'''
-
+	print(country)
+	print(start_date)
+	print(end_date)
+	print(confidence)
 	# 1. Identigy region of the country:
 	region = country_to_region(country)
 
@@ -127,8 +149,8 @@ def get_points (country, start_date, end_date, confidence,
 	#modis = data_downloader.selector(region, "MODIS")	
 	#viirs =  data_downloader.selector(region, "VIIRS")
 
-	modis = os.path.join(str(ROOT), "data/fires_regions/MODIS_C6_South_America_archive.shp")
-	viirs = os.path.join(str(ROOT),"data/fires_regions/VNP14IMGTDL_NRT_South_America_archive.shp")
+	modis = os.path.join(ROOT, "data/fires_regions/MODIS_C6_South_America_archive.shp")
+	viirs = os.path.join(ROOT,"data/fires_regions/VNP14IMGTDL_NRT_South_America_archive.shp")
 
 
 	#3. Combine shapefiles
@@ -148,10 +170,10 @@ def get_points (country, start_date, end_date, confidence,
 		str(val))
 	filter_confidence = country_time.CONFIDENCE == confidence 
 	country_filtered = country_time[filter_confidence]
-	
+	print(country_filtered)
 
 	if len(country_filtered) == 0:
-		return "No data matching this request"
+		return False
 
 	#7. Save
 	if save == True:

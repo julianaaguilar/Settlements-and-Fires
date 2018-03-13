@@ -1,3 +1,7 @@
+# Project: FIRE TRACKING
+# Task: WEBPAGE
+# Team: JULIANA AGUILAR, LUCIA DELGADO AND JORGE QUINTERO
+
 from flask import Flask, render_template, request, send_file
 from . import model 
 
@@ -24,16 +28,16 @@ def map():
 	# Note: the get does not return the alternative when value is empty.
 	country = request.args.get("country", "")
 
-	intensity = request.args.get("intensity", "normal")
-	if intensity == None:
+	intensity = request.args.get("intensity", "")
+	if intensity == "":
 		intensity = "normal"
 
-	from_date = request.args.get("from_date", "2018-02-01")
-	if from_date == None:
-		from_date = "2018-02-01"
+	from_date = request.args.get("from_date", "")
+	if from_date == "":
+		from_date = "2018-02-26"
 
-	to_date = request.args.get("to_date", "2018-04-01")
-	if to_date == None:
+	to_date = request.args.get("to_date", "")
+	if to_date == "":
 		to_date = "2018-04-01"
 
 	from_tot = float(from_date[0:4]) * 10000 + \
@@ -44,7 +48,7 @@ def map():
 			float(to_date[5:7]) * 100 + \
 			float(to_date[8:10])
 
-	if from_tot >= to_tot:
+	if from_tot <= to_tot:
 		map_out = model.makemap(country,from_date, to_date, intensity)
 	else:
 		map_out = model.makemap(country,to_date, from_date, intensity)
