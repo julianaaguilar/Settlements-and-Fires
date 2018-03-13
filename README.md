@@ -33,9 +33,11 @@
 
 # About the files
 	The files we use in this project are heavy, and can't be uploaded to github.
+	Additional files can be downloaded from here: https://www.dropbox.com/sh/825bo6b7atkl067/AACQwhnEzO5_DmeQAismH_wya?dl=0
 
-	We put a small sample in github (South America), but the complete set of files can be downloaded from this link:
-	https://www.dropbox.com/sh/825bo6b7atkl067/AACQwhnEzO5_DmeQAismH_wya?dl=0 
+	1. Fires worldwide: We put a small sample in github (South America), and the complete set of files can be downloaded from this link:
+	 
+	2. Settlements: we couldn't upload these files. Please unzip the file "GHS_BUILT_LDS2014_GLOBE_R2016A_54009_250_v1_0.zip" into "/FireTracker/app/data/GHSL".
 
 # The webpage
 	The webpage was built using flask. It produces three types of outputs:
