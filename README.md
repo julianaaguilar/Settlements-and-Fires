@@ -20,35 +20,43 @@
 	/near-real-time/firms/active-fire-data
 	
 	2. Settlements
-	We use Global Human Settlement Layers (GHSL) from the European Commission. These data contain an information layer on built-up 
-	presence as derived by the ad-hoc Landsat 8 collection 2013/2014. 
+	We use Global Human Settlement Layers (GHSL) from the European Commission. 
+	These data contain an information layer on built-up presence as derived by 
+	the ad-hoc Landsat 8 collection 2013/2014. Resolution: 250m; Year: 2014.
 
 	Downloaded from: 
 	   http://cidportal.jrc.ec.europa.eu/ftp/jrc-opendata/GHSL/GHS_BUILT_LDSMT_GLOBE_R2015B/GHS_BUILT_LDS2014_GLOBE_R2016A_54009_250/
 
-	Resolution: 250m
-
-	Year: 2014
-
-
+	
 # About the files
 	The files we use in this project are heavy, and can't be uploaded to github.
 	
 	Additional files: https://www.dropbox.com/sh/825bo6b7atkl067/AACQwhnEzO5_DmeQAismH_wya?dl=0 
 
-	1. Fires (optional): We uploaded a small sample to github (South America), but the complete set of files can be downloaded from the link above. 
-	Instructions: i) Extract the file "Fires.zip" to "Fire-database/FireTracker/app/data/fires_regions"; ii) Modify "Fire-database/FireTracker/app/__init__.py" to include the complete list of countries. Exact insructions are given in the code.
+	1. Fires (optional): We uploaded a small sample to github (South America), but the complete 
+	set of files can be downloaded from the link above. 
+	Instructions: i) Extract the file "Fires.zip" to "Fire-database/FireTracker/app/data/fires_regions"; 
+	ii) Modify "Fire-database/FireTracker/app/__init__.py" to include the complete list of countries. 
+	Exact insructions are given in the code.
+	
 	2. Settlements (Required): The folder is empty.
 	Instructions: i) Extract the file "Settlements.zip" to "Fire-database/FireTracker/app/data/GHSL".
 	
 
 # The webpage
 	The webpage was built using flask. It produces three types of outputs:
-	1. Fires: dynamic map with specified parameters (country, fires confidence level and time frame of occurence). Placing the mouse at each fire shows time and date of registration.
+	1. Fires: dynamic map with specified parameters (country, fires confidence level and time frame of occurence). 
+	Placing the mouse at each fire shows time and date of registration.
 	2. Settlements: static map showing GHLS data for the specified country. Available only for few countries.
-	3. Fires and settlements: dynamic map with specified parameters (country, fires confidence level and time frame of occurence). Placing the mouse at each fire shows time, date of registration and percent of settled area around the fire. This data is only available for Colombia.
+	3. Fires and settlements: dynamic map with specified parameters (country, fires confidence level and time frame 
+	of occurence). Placing the mouse at each fire shows time, date of registration and percent of settled area around 
+	the fire. This data is only available for Colombia.
 	
-	Instructions
+	Sample data: 
+	As mentioned, github only includes a demo version. If complete files are downloaded as previously specified you 
+	need to modify "/app/__init__.py" to reflect these changes.
+	
+# Instructions -Option 1
 	0. Extract "Settlements.zip" to "Fire-database/FireTracker/app/data/GHSL".
 	1. Change your directory to "/Fire-database/Firetracker/" 
 	2. Install pipenv. Follow these instructions:https://www.dropbox.com/sh/825bo6b7atkl067/AACQwhnEzO5_DmeQAismH_wya?dl=0 
@@ -56,24 +64,36 @@
 	3. Run $ pipenv shell
 	4. Run $ FLASK_APP=run.py pipenv run flask run
 	5. Open your favourite browser and go to the path indicated by the python console. Usually: 127.0.0.1000
-	6. Place your request (it takes several minutes, between 5 and 15, depending on the request.
+	6. Place your request (it takes several minutes, between 5 and 15, depending on the request).
+	7. If dates don't display automatically, type a starting and ending date between 2018-02-01 and 2018-03-13. 
+	Please keep the format, it corresponds to year/month/day.
+	8. If you get your previous search, instead of the new one, refres your browser.
 	
-	Sample data: 
-	As mentioned, github only includes a demo version. If complete files are downloaded as previously specified you need to modify "/app/__init__.py" to reflect these changes.
+	Specific features:By placing the mouse on top of the fire you can see its main characteristics.
+
+# Instructions -Option 2
+	The virtual environment should handle all downloads. These packages will be automatically installed after 
+	step 2 in the previous intructions. 
+	However, if you find problems intalling the packages these are some of the steps we followed. 
 	
-	Specific feutures: 
-		By placing the mouse on top of the fire you can see its main characteristics.
-
-# Packages
-	The virtual environment should handle all downloads. These packages will be automatically installed after step 2 in the previous intructions. However, if you find problems intalling the packages these are some of the steps we followed. 
-
-	'''
-	NOTE ON INSTALLING LIBRARIES:
-	*Most of the libraries are easily installed using "sudo pip3 install"
-	*Cartopy required installing Anaconda, however, there might be other
-	ways to install it without Anaconda. 
-	*We include the commands we used to install Cartopy and Folium:
-	'''
+	0. Install packages
+	
+	use pip install <package> --user 
+	for the following packages:
+	flask = "*"
+	rtree = "*"
+	fiona = "*"
+	geopandas = "*"
+	matplotlib = "*"
+	pyshp = "*"
+	pandas = "*"
+	folium = "*"
+	pathlib = "*"
+	rasterio = "==1.0a12"
+	numpy = "*"
+	requests = "*"
+	regex = "*"
+	"beautifulsoup4" = "*"
 
 	'''
 	Install Anaconda (REQUIRED TO INSTALL CARTOPY)
@@ -90,16 +110,17 @@
 	sudo pip install cartopy
 	'''
 	'''
-	Install folium
-	pip install folium
-	'''
-	'''
-	Install rasterio
+	Install rasterio, if pip install doesn't work
 	$ sudo add-apt-repository ppa:ubuntugis/ppa
 	$ sudo apt-get update
 	$ sudo apt-get install python-numpy gdal-bin libgdal-dev
-	$ pip install rasterio
-	''
+	$ pip install rasterio===1.0a12
+	'''
+	
+	1. Change your directory to "/Fire-database/Firetracker/"
+	2. Run $ FLASK_APP=run.py flask run
+	3. Follow steps 5-8 of Instructions-Option 1
+	
 # The code (Responsible team member in parenthesis)
 
 	data_downloader.py (Jorge Quintero):
