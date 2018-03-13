@@ -79,6 +79,11 @@ def ghsl_fire():
 @app.route("/ghsl_fire_map")
 def ghsl_fire_map():
 	country = request.args.get("country", "")
+	
+	# The ideal scenario is to run this function, however, 
+	# there is a mismatch in the formats that we couldn't solve
+
+	#We show results for Colombia instead
 	#map_out = model.makemap_settlement_fire(country)
 
 	map_out = "maps/buffer_map_settled.html"
