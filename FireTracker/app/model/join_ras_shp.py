@@ -54,16 +54,19 @@ def share_settled(country, buff_size=1, threshold=1):
 	out_geojson = os.path.join(FILEPATH_S, file_geoj)
 
 	# Generate country ghsl raster
-	if os.path.isfile(path_ras) == False:
-		raster_ghsl.ghsl_country(country)
+	#if os.path.isfile(path_ras) == False:
+	#	raster_ghsl.ghsl_country(country)
 
 	# Open files
 	fire = maps_maker.get_points(country, start_date="2018-02-01", end_date="2018-03-13", confidence="normal", save = False, file_name = out_geojson)
-	settle = rasterio.open(path_ras)
+	#settle = rasterio.open(path_ras)
+
+	settle = raster_ghsl.ghsl_country(country, ras_reader=True)
 
 	# Create buffers
 	buffers = fire.copy(deep=True)
 	buffers["geometry"] = buffers.geometry.buffer(buff_size)
+
 
 	# Reproject geopandas dataframe to match raster's projection
 	dst_crs = settle.crs.data
@@ -74,10 +77,15 @@ def share_settled(country, buff_size=1, threshold=1):
 	fire['mean_settle'] = np.nan
 	fire['settled'] = np.nan
 
+	buffers.reset_index(drop=True, inplace=True)
+	buffers.drop('geo', axis=1, inplace=True)
+	buffers.columns
+
 	for i in range(len(buffers.index)):
 		# defint temporal .tif file path
 		
 		b1 = buffers.loc[i:i]
+		print(b1)
 
 		# Clip buffer to raster
 		b1 = raster_ghsl.clipping(settle, b1, out_ras)
@@ -86,17 +94,19 @@ def share_settled(country, buff_size=1, threshold=1):
 		mean =  raster_mean(b1) 
 
 		# Write mean into geopandas dataframe
-		ind = buffers.loc[i, "index_righ"]
-		fire.loc[fire["index_righ"] == ind, 'mean_settle'] = mean
+		ind = buffers.loc[i, "index_right"]
+		fire.loc[fire["index_right"] == ind, 'mean_settle'] = mean
 		
 		if mean >= threshold:
-			fire.loc[fire["index_righ"] == ind, 'settled'] = 1
+			fire.loc[fire["index_right"] == ind, 'settled'] = 1
 		else:
-			fire.loc[fire["index_righ"] == ind, 'settled'] = 0
+			fire.loc[fire["index_right"] == ind, 'settled'] = 0
 
+
+	fire.drop('geo', axis=1, inplace=True)
+	fire.set_index('geometry', drop=True, inplace=True)
 	
-	fire.to_file(filename = out_geojson, 
-		driver='GeoJSON')
+	fire.to_file(filename = out_geojson, driver='GeoJSON')
 
 	
 

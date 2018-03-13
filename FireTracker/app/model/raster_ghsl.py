@@ -60,19 +60,21 @@ FILEPATH_O = os.path.join(ROOT,"data/GHSL")
 FILEPATH_S = os.path.join(ROOT, "data/outfiles")
 FILEPATH_W = os.path.join(ROOT, "maps")
 
-def ghsl_country(country):
+def ghsl_country(country, ras_reader=False):
 	'''
 	Clips GHSL raster to country shape and prints.
 	Inputs:
 		country (str): country name
+		ras_reader: (bool) determines the output
 
-	Return: WSG84 bounds of image	
+	Return: if ras_reader==True it returns
+			raster opened with rasterio, otherwise image (.png) 	
 	'''
 	# Shp with country boundaries and reproject to raster's projection
 	country_shp = country_boundariesWSG84(country)
 
 	# Get filename
-	filen = country_shp.iloc[0]["CONTINENT"]
+	#filen = country_shp.iloc[0]["CONTINENT"]
 
 	# Changessss depending on country/ras
 	#file_in = filen + "_GHSL.tif"
@@ -92,10 +94,9 @@ def ghsl_country(country):
 	# Print and export bounds
 	map_c = rasterio.open(out_ras)
 
-	profile = map_c.profile
-
-	with rasterio.open(out_ras, 'w', **profile) as dst:
-		dst.write(map_c)
+	if ras_reader==True:
+		return map_c
+	
 	# bounds = boundsWSG84(map_c)
 
 	print_ras(map_c, out_png)
@@ -165,6 +166,7 @@ def clipping(ras, shp, out_ras):
 	out_img, out_transform = mask(raster=ras, shapes=coords, crop=True)
 	out_meta = ras.meta.copy()
 
+	# This should work but the image is empty
 	out_meta.update({"driver": "GTiff", 
 		"height": out_img.shape[1], 
 		"width": out_img.shape[2], 

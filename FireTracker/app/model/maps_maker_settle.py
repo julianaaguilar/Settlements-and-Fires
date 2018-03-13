@@ -1,5 +1,5 @@
 # Project: FIRE TRACKING
-# Task: COMPILE INFORMATION OF SETTLEMENTS AND FIRES FOR COLOMBIA
+# Task: COMPILE INFORMATION OF SETTLEMENTS AND FIRES
 # Team: JULIANA AGUILAR, LUCIA DELGADO AND JORGE QUINTERO
 
 '''
@@ -10,7 +10,7 @@ MAIN OUTPUTS
 '''
 '''
 This code generates an interactive map for one country including information 
-about about population close to each fire.
+about settled area at 1km buffer to each fire.
 
 We generate a map for only one country, since GHSL data (raster data)
 is only avaliable for some countries. This code is easily generalizable to
@@ -20,10 +20,8 @@ other countries.
 import folium
 import geopandas as gpd
 from pathlib import Path
-#
 from . import join_ras_shp
 from . import maps_maker
-#simport join_ras_shp
 import os
 
 ROOT = str(Path(__file__).parents[1])
@@ -34,6 +32,9 @@ FILEPATH_W = os.path.join(ROOT, "maps")
 def fire_settle(country):
 	'''
 	Assign share of settled area 0.7 km around the fire to each fire in a dynamic map.
+
+	Input:
+		country (str)
 	'''
 
 	# File paths
@@ -53,7 +54,7 @@ def fire_settle(country):
 	df = gpd.read_file(out_geojson) 
 	geojson = out_geojson
 
-	#Location for Colombia
+	#Location
 	location = maps_maker.get_coordinates(country)
 
 	'''
