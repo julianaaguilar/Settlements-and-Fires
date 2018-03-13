@@ -88,20 +88,21 @@ def draw_map (country, start_date, end_date, confidence):
 	name_ = "maps/" + country + ".html"
 	name = os.path.join(ROOT, name_)
 
+	#Generate file with the plots that we want to draw
+	points = get_points(country, start_date, end_date, confidence, 
+	save = True, file_name = OUT_GEOJSON)
+
+	# Get location
+	location = get_coordinates(country)
+	
 	if os.path.isfile(OUT_GEOJSON) == False:
+	#if type(points) == boolean:  
 		outmap = folium.Map(location = location, zoom_start = 7)
 
 	else: 
-		#Generate file with the plots that we want to draw
-		points = get_points(country, start_date, end_date, confidence, 
-		save = True, file_name = OUT_GEOJSON)
-
 		# Call data
 		df = gpd.read_file(OUT_GEOJSON) 
 		geojson = OUT_GEOJSON
-
-		# Get location
-		location = get_coordinates(country)
 
 		#Features added
 		outmap = folium.Map(location = location, zoom_start = 4)
