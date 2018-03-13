@@ -25,6 +25,9 @@ pathlib = "*"
 rasterio = "==1.0a12"
 cython = "*"
 numpy = "*"
+requests = "*"
+regex = "*"
+"beautifulsoup4" = "*"
 
 
 [dev-packages]

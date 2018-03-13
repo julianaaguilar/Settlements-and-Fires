@@ -44,12 +44,15 @@ import cartopy.io.shapereader as shpreader
 import folium
 import os
 from pathlib import Path
+#
 from . import data_downloader
 #import data_downloader
 from pathlib import Path
 
 ROOT = Path(__file__).parents[1]
 OUT_GEOJSON = os.path.join(str(ROOT), "data/outfiles/output.geojson")
+# Lu, usa este nombre para guardar el html vacío
+EMPTY_HTML = os.path.join(str(ROOT), "maps/emptysearch.html")
 
 
 def draw_map (country, start_date, end_date, confidence):

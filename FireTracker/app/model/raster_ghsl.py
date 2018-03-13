@@ -72,11 +72,11 @@ def ghsl_country(country):
 	country_shp = country_boundariesWSG84(country)
 
 	# Get filename
-	#filen = country_shp.iloc[0]["CONTINENT"]
+	filen = country_shp.iloc[0]["CONTINENT"]
 
 	# Changessss depending on country/ras
 	#file_in = filen + "_GHSL.tif"
-	file_in = "GHSL_Globe.tif"
+	file_in = "GHS_BUILT_LDS2014_GLOBE_R2016A_54009_250_v1_0.tif"
 	file_out = country + "_ghsl.tif"
 	file_out_png = country + "_ghsl.png"
 
@@ -91,11 +91,16 @@ def ghsl_country(country):
 
 	# Print and export bounds
 	map_c = rasterio.open(out_ras)
-	bounds = boundsWSG84(map_c)
+
+	profile = map_c.profile
+
+	with rasterio.open(out_ras, 'w', **profile) as dst:
+		dst.write(map_c)
+	# bounds = boundsWSG84(map_c)
 
 	print_ras(map_c, out_png)
 
-	return (bounds, out_png)
+	return out_png
  
 def country_boundariesWSG84(country):
 	'''
@@ -182,7 +187,7 @@ def print_ras(map_c, out_png):
 
 	fig, ax = pyplot.subplots(1)
 
-	pyplot.imshow(map_c.read(1), cmap='Reds')
+	show(map_c, with_bounds=False, cmap="Reds", ax=ax)
 	#pyplot.colorbar()
 	ax.set_xticks([])
 	ax.set_yticks([])
@@ -194,6 +199,5 @@ def print_ras(map_c, out_png):
 	ax.spines['bottom'].set_visible(False)
 
 	pyplot.savefig(out_png, bbox_inches='tight', transparent=True, dpi=150)
-
 
 
