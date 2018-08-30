@@ -8,12 +8,12 @@ The objectives of this project is to provide an interactive platform to show the
 
 For this purpose we built a webpage using Flask. The webpage produces three types of **outputs** for the chosen country:
 
-**1. Fires:** dynamic map with specified parameters (country, fires confidence level and time frame of occurence). 
+1. **Fires:** dynamic map with specified parameters (country, fires confidence level and time frame of occurrence). 
 Placing the mouse at each fire shows time and date of registration.
 
-**2. Settlements:** static map showing GHLS data for the specified country.
+2. **Settlements:** static map showing GHLS data for the specified country.
 
-**3. Fires and settlements:** dynamic map with specified parameters (country, fires confidence level and time frame 
+3. **Fires and settlements:** dynamic map with specified parameters (country, fires confidence level and time frame 
 of occurence). Placing the mouse at each fire shows time, date of registration and percent of settled area around 
 the fire. This data is only available for Colombia.
 
