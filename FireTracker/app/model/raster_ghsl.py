@@ -164,7 +164,7 @@ def clipping(ras, shp, out_ras):
 
 	coords = getFeatures(shp)
 
-	out_img, out_transform = mask(raster=ras, shapes=coords, crop=True)
+	out_img, out_transform = mask(dataset=ras, shapes=coords, crop=True)
 	out_meta = ras.meta.copy()
 
 	# This should work but the image is empty
@@ -190,7 +190,7 @@ def print_ras(map_c, out_png):
 
 	fig, ax = pyplot.subplots(1)
 
-	show(map_c, with_bounds=False, cmap="Reds", ax=ax)
+	show(map_c, with_bounds=False, cmap="coolwarm", ax=ax)
 	#pyplot.colorbar()
 	ax.set_xticks([])
 	ax.set_yticks([])

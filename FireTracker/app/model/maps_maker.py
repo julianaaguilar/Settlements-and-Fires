@@ -13,11 +13,11 @@ THE DATA:
 We use fire points identified by NASA using satelite images
 from two satelites: Modis and Viirs.
 
-Data obtained from 
+Data obtained from
 https://earthdata.nasa.gov/earth-observation-data
 /near-real-time/firms/active-fire-data
 
-A data base for each region can be updated dayly using data_downloader.py 
+A data base for each region can be updated dayly using data_downloader.py
 
 Format: ESRI Shapefile
 Projection: WGS84, (EPSG:4326)
@@ -25,7 +25,7 @@ Projection: WGS84, (EPSG:4326)
 '''
 SOURCES:
 
-The following sources where helpful to generate this code. 
+The following sources where helpful to generate this code.
 The sources consulted were used to understand which libraries to use
 and which commands are useful for each required task.
 
@@ -61,9 +61,9 @@ import cartopy.io.shapereader as shpreader
 import folium
 import os
 from pathlib import Path
+#from . import data_downloader
 #
-from . import data_downloader
-#import data_downloader
+import data_downloader
 from pathlib import Path
 
 ROOT = str(Path(__file__).parents[1])
@@ -74,60 +74,60 @@ EMPTY_HTML = os.path.join(str(ROOT), "maps/emptysearch.html")
 
 def draw_map (country, start_date, end_date, confidence):
 	'''
-	This function gets a country and a time frame, 
+	This function gets a country and a time frame,
 	and confidence and returs a MAP
-	
+
 	Inputs:
 		country: string
-		start_date: (string with format 2018-02-26) 
+		start_date: (string with format 2018-02-26)
 		end_date: (string with format 2018-02-26)
 		confidence: "normal", "low", "high"
-		
+
 	Returns: HTML Map
 	'''
 	name_ = "maps/" + country + ".html"
 	name = os.path.join(ROOT, name_)
 
 	#Generate file with the plots that we want to draw
-	points = get_points(country, start_date, end_date, confidence, 
+	points = get_points(country, start_date, end_date, confidence,
 	save = True, file_name = OUT_GEOJSON)
 
 	# Get location
 	location = get_coordinates(country)
-	
+
 	if os.path.isfile(OUT_GEOJSON) == False:
-	#if type(points) == boolean:  
+	#if type(points) == boolean:
 		outmap = folium.Map(location = location, zoom_start = 7)
 
-	else: 
+	else:
 		# Call data
-		df = gpd.read_file(OUT_GEOJSON) 
+		df = gpd.read_file(OUT_GEOJSON)
 		geojson = OUT_GEOJSON
 
 		#Features added
 		outmap = folium.Map(location = location, zoom_start = 4)
-		for i in range(len(df)):                                              
-			lat = df.iat[i,9]  
-			lon = df.iat[i,10] 
+		for i in range(len(df)):
+			lat = df.iat[i,9]
+			lon = df.iat[i,10]
 			info = "Date: " + str(df.iat[i,2]) + " Time: "  + str(df.iat[i,2])
 			folium.CircleMarker(radius=5, location=[lat, lon], popup = info,
 				fill_color='salmon', color='red',
 				fill_opacity=0.8, line_opacity=0.8).add_to(outmap)
-	
-	outmap.save(outfile=name) 
+
+	outmap.save(outfile=name)
 	return name
 
 
-def get_points (country, start_date, end_date, confidence, 
+def get_points (country, start_date, end_date, confidence,
 	save = True, file_name = OUT_GEOJSON):
 	'''
-	This function gets a country and a time frame, 
+	This function gets a country and a time frame,
 	and returs a GeoDataFrame with the fire data
 	for the desired country and data frame.
-	
+
 	Inputs:
 		country: string
-		start_date: (string with format 2018-02-26) 
+		start_date: (string with format 2018-02-26)
 		end_date: (string with format 2018-02-26)
 		confidence: "normal", "low", "high"
 		save: boolean, saves to json and shp
@@ -147,7 +147,7 @@ def get_points (country, start_date, end_date, confidence,
 	A dictionary matchin region to modis and viirs file
 	'''
 
-	#modis = data_downloader.selector(region, "MODIS")	
+	#modis = data_downloader.selector(region, "MODIS")
 	#viirs =  data_downloader.selector(region, "VIIRS")
 
 	modis = os.path.join(ROOT, "data/fires_regions/MODIS_C6_South_America_archive.shp")
@@ -167,9 +167,9 @@ def get_points (country, start_date, end_date, confidence,
 	#plt.show()
 
 	#6. Filter by confidence
-	country_time.CONFIDENCE = country_time.CONFIDENCE.apply(lambda val: 
+	country_time.CONFIDENCE = country_time.CONFIDENCE.apply(lambda val:
 		str(val))
-	filter_confidence = country_time.CONFIDENCE == confidence 
+	filter_confidence = country_time.CONFIDENCE == confidence
 	country_filtered = country_time[filter_confidence]
 	print(country_filtered)
 
@@ -179,11 +179,11 @@ def get_points (country, start_date, end_date, confidence,
 	#7. Save
 	if save == True:
 		country_filtered.drop("geo", axis = 1, inplace = True )
-		#country_filtered.to_file(filename = filename + "_shp, 
+		#country_filtered.to_file(filename = filename + "_shp,
 		#	driver='ESRI Shapefile')
 		if os.path.isfile(file_name) == True:
 			os.remove(file_name)
-		country_filtered.to_file(filename = file_name, 
+		country_filtered.to_file(filename = file_name,
 			driver='GeoJSON')
 
 	return country_filtered
@@ -198,7 +198,7 @@ def combine_shapefiles(modis, viirs):
 		viirs: string
 	Returs: geopandas dataframe
 	'''
-	
+
 	m = gpd.read_file(modis)
 	v = gpd.read_file(viirs)
 
@@ -212,7 +212,7 @@ def combine_shapefiles(modis, viirs):
 	m.crs #empty
 	v.crs
 
-	#Since projection is empty, we set 
+	#Since projection is empty, we set
 	#set projection to WGS84:
 	m.crs = {'init': 'epsg:4326'}
 	v.crs = {'init': 'epsg:4326'}
@@ -228,11 +228,11 @@ def combine_shapefiles(modis, viirs):
 
 def country_to_region(country):
 	'''
-	This function gets a country and returs the region 
+	This function gets a country and returs the region
 	that the country belongs to.
-	Input: 
+	Input:
 		country (string)
-	Output: 
+	Output:
 		region (string)
 	'''
 	country_to_reg = {'Afghanistan': 'South Asia',
@@ -388,13 +388,13 @@ def country_to_region(country):
 	 'Yemen': 'North and Central Africa',
 	 'Zambia': 'North and Central Africa',
 	 'Zimbabwe': 'Southern Africa'}
-		
+
 	return country_to_reg[country]
 
 
 def clip_fire_country(country, fire_data):
 	'''
-	This function takes a country and a fire_data set and returs a 
+	This function takes a country and a fire_data set and returs a
 	geopandas data frame containning the fire_data for the country
 	Inputs:
 		country: string
@@ -439,7 +439,7 @@ def clip_fire_country(country, fire_data):
 	#Plot>
 	country_border = world_gpd.loc[world_gpd['ADMIN'] == country]
 	base = country_border.plot(color='white', edgecolor='black')
-	selection.plot(ax = base,color='red' ) 
+	selection.plot(ax = base,color='red' )
 	#plt.show()
 
 	return selection
@@ -447,8 +447,8 @@ def clip_fire_country(country, fire_data):
 
 def time_filter(country_points, start_date, end_date):
 	'''
-	This function takes a geopandas data frame and a 
-	start and end date. Returns a filtered data frame for the desired 
+	This function takes a geopandas data frame and a
+	start and end date. Returns a filtered data frame for the desired
 	time frame.
 	Inputs:
 		country_points (geopandas data frame)
@@ -457,7 +457,7 @@ def time_filter(country_points, start_date, end_date):
 	Returns> geopandas data frame
 	'''
 
-	filter_lower = country_points.ACQ_DATE >= start_date 
+	filter_lower = country_points.ACQ_DATE >= start_date
 	on_date = country_points[filter_lower]
 
 	filter_upper = on_date.ACQ_DATE <= end_date
@@ -476,10 +476,10 @@ def get_coordinates(country):
 
 	'''
 	NOTE:
-	This dictionary maps all countries to center coordinates. 
+	This dictionary maps all countries to center coordinates.
 	Latitude and Longiture
 
-	Source: 
+	Source:
 	https://developers.google.com/public-data/docs/canonical/countries_csv
 	'''
 
