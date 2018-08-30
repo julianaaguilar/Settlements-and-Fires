@@ -2,6 +2,7 @@
 # Task: PROCESS GHSL RASTERS
 # Team: JULIANA AGUILAR, LUCIA DELGADO AND JORGE QUINTERO
 
+# small change
 '''
 MAIN OUTPUTS
 - Clips GHSL raster at the country level
@@ -10,14 +11,14 @@ MAIN OUTPUTS
 '''
 
 '''
-THE DATA 
+THE DATA
 
-GHSL - Global Human Settlement Layers 
+GHSL - Global Human Settlement Layers
 
-Downloaded from: 
+Downloaded from:
    http://cidportal.jrc.ec.europa.eu/ftp/jrc-opendata/GHSL/GHS_BUILT_LDSMT_GLOBE_R2015B/GHS_BUILT_LDS2014_GLOBE_R2016A_54009_250/
 
-These data contain an information layer on built-up 
+These data contain an information layer on built-up
 presence as derived by the ad-hoc Landsat 8 collection 2013/2014.
 
 Due to space constraints, continents where cut using ArcGIS.
@@ -31,7 +32,7 @@ Projection: World Mollweide (EPSG:54009)
 '''
 MAIN SOURCES OF CODE
 https://mapbox.github.io/rasterio/intro.html
-served as main source for this code 
+served as main source for this code
 '''
 
 
@@ -45,7 +46,7 @@ from rasterio.crs import CRS
 
 import cartopy.io.shapereader as shpreader
 import geopandas as gpd
-import fiona 
+import fiona
 
 from matplotlib import pyplot
 
@@ -68,7 +69,7 @@ def ghsl_country(country, ras_reader=False):
 		ras_reader: (bool) determines the output
 
 	Return: if ras_reader==True it returns
-			raster opened with rasterio, otherwise image (.png) 	
+			raster opened with rasterio, otherwise image (.png)
 	'''
 	# Shp with country boundaries and reproject to raster's projection
 	country_shp = country_boundariesWSG84(country)
@@ -86,7 +87,7 @@ def ghsl_country(country, ras_reader=False):
 	file_ras = os.path.join(FILEPATH_O, file_in)
 	out_ras = os.path.join(FILEPATH_S, file_out)
 	out_png = os.path.join(FILEPATH_W, file_out_png)
-	
+
 	# Clip raster to country
 	mosaic = rasterio.open(file_ras)
 	out_ras = clipping(mosaic, country_shp, out_ras)
@@ -96,13 +97,13 @@ def ghsl_country(country, ras_reader=False):
 
 	if ras_reader==True:
 		return map_c
-	
+
 	# bounds = boundsWSG84(map_c)
 
 	print_ras(map_c, out_png)
 
 	return out_png
- 
+
 def country_boundariesWSG84(country):
 	'''
 	Clips country boundaries from worldmap
@@ -139,7 +140,7 @@ def boundsWSG84(map_c, dst_crs='EPSG:4326'):
 	Calculate bounds of projected image.
 	Not in use.
 
-	Inputs: 
+	Inputs:
 		map_c: (rasterio._io.RasterReader) origin raster opened with rasterio
 		out_ras: path to save reprojected raster
 		dst_crs: destination coordinates system
@@ -157,7 +158,7 @@ def clipping(ras, shp, out_ras):
 	'''
 	Clip raster to shapefile.
 	'''
-	# Reproject  country boundaries to raster's projection	
+	# Reproject  country boundaries to raster's projection
 	dst_crs = ras.crs.data
 	shp = shp.to_crs(dst_crs)
 
@@ -167,20 +168,20 @@ def clipping(ras, shp, out_ras):
 	out_meta = ras.meta.copy()
 
 	# This should work but the image is empty
-	out_meta.update({"driver": "GTiff", 
-		"height": out_img.shape[1], 
-		"width": out_img.shape[2], 
-		"transform": out_transform, 
+	out_meta.update({"driver": "GTiff",
+		"height": out_img.shape[1],
+		"width": out_img.shape[2],
+		"transform": out_transform,
 		"crs":dst_crs})
 
-	with rasterio.open(out_ras, "w", **out_meta) as dest: 
+	with rasterio.open(out_ras, "w", **out_meta) as dest:
 		dest.write(out_img)
 
 	return out_ras
 
 def print_ras(map_c, out_png):
 	'''
-	Prints pretty maps based on raster. 
+	Prints pretty maps based on raster.
 	Saves as image.
 	Inputs:
 		map_c: rasterio._io.RasterReader
@@ -201,5 +202,3 @@ def print_ras(map_c, out_png):
 	ax.spines['bottom'].set_visible(False)
 
 	pyplot.savefig(out_png, bbox_inches='tight', transparent=True, dpi=150)
-
-
