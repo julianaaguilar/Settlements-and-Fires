@@ -1,10 +1,9 @@
 # Tracking fires and nearby settlements
 
-Team: Juliana Aguilar, Lucía Delgado & Jorge Quintero
+Team: *Juliana Aguilar, Lucía Delgado & Jorge Quintero*
 
-## The project
 
-The objectives of this project is to provide an interactive platform to show the location of fires and the share of settled area they could impact in a selected country and time range. 
+The objective of this project is to provide an interactive platform to show the location of fires and the share of settled area they could impact in a selected country and time range. 
 
 For this purpose we built a webpage using Flask. The webpage produces three types of **output** for the chosen country:
 
