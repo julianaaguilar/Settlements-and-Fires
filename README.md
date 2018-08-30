@@ -1,31 +1,31 @@
-# FIRE TRACKER
+# Tracking fires and nearby settlements
 
-Team: Juliana Aguilar, Lucía Delgado & Jorge Quintero
+#### *Team: Juliana Aguilar, Lucía Delgado & Jorge Quintero*
 
-Objectives: 
-- Provide an interactive platform that allows fire tracking around
-the globe with updated information.
-- Identify fires that are within a certain radius of human
-settlements.
+## The project
 
-For further understanding open "Tracking fires worldwide.pdf", it contains the main information about the project.  
+The objectives of this project is to provide an interactive platform to show the location of fires and the share of settled area they could impact in a selected country. 
 
-# Data
-1. Fires worldwide
-We use fire points identified by NASA using satelite images
-from two satelites: Modis and Viirs.
+For this purpose we built a webpage using Flask. The webpage produces three types of outputs for the chosen country:
 
-Data obtained from 
-https://earthdata.nasa.gov/earth-observation-data
-/near-real-time/firms/active-fire-data
+**1. Fires:** dynamic map with specified parameters (country, fires confidence level and time frame of occurence). 
+Placing the mouse at each fire shows time and date of registration.
+**2. Settlements:** static map showing GHLS data for the specified country.
+**3. Fires and settlements:** dynamic map with specified parameters (country, fires confidence level and time frame 
+of occurence). Placing the mouse at each fire shows time, date of registration and percent of settled area around 
+the fire. This data is only available for Colombia.
 
-2. Settlements
-We use Global Human Settlement Layers (GHSL) from the European Commission. 
-These data contain an information layer on built-up presence as derived by 
-the ad-hoc Landsat 8 collection 2013/2014. Resolution: 250m; Year: 2014.
+ We use the following datasets:
 
-Downloaded from: 
-   http://cidportal.jrc.ec.europa.eu/ftp/jrc-opendata/GHSL/GHS_BUILT_LDSMT_GLOBE_R2015B/GHS_BUILT_LDS2014_GLOBE_R2016A_54009_250/
+**1. Fires worldwide:**
+We use fire points identified by NASA using satelite images from two satelites: Modis and VIIRS.
+
+The data was obtained from https://earthdata.nasa.gov/earth-observation-data/near-real-time/firms/active-fire-data
+
+**2. Settlements**
+We use Global Human Settlement Layers (GHSL) from the European Commission. These data contains information on built-up presence as derived by the ad-hoc Landsat 8 collection 2013/2014. The resolution is of 250m.
+
+The data was obtained from http://cidportal.jrc.ec.europa.eu/ftp/jrcopendata/GHSL/GHS_BUILT_LDSMT_GLOBE_R2015B/GHS_BUILT_LDS2014_GLOBE_R2016A_54009_250/
 
 	
 # About the files
@@ -39,18 +39,10 @@ Instructions: i) Extract the file "Fires.zip" to "Fire-database/FireTracker/app/
 ii) Modify "Fire-database/FireTracker/app/__init__.py" to include the complete list of countries. 
 Exact insructions are given in the code.
 
-2. Settlements (Required): The folder is empty.
-Instructions: i) Extract the file "Settlements.zip" to "Fire-database/FireTracker/app/data/GHSL".
+2. Settlements (Required): The folder is empty. Instructions: i) Extract the file "Settlements.zip" to "Fire-database/FireTracker/app/data/GHSL".
 	
 
-# The webpage
-The webpage was built using flask. It produces three types of outputs:
-1. Fires: dynamic map with specified parameters (country, fires confidence level and time frame of occurence). 
-Placing the mouse at each fire shows time and date of registration.
-2. Settlements: static map showing GHLS data for the specified country. Available only for few countries.
-3. Fires and settlements: dynamic map with specified parameters (country, fires confidence level and time frame 
-of occurence). Placing the mouse at each fire shows time, date of registration and percent of settled area around 
-the fire. This data is only available for Colombia.
+
 
 Sample data: 
 As mentioned, github only includes a demo version. If complete files are downloaded as previously specified you 
@@ -80,20 +72,20 @@ Specific features:By placing the mouse on top of the fire you can see its main c
 	
 	use pip install <package> --user 
 for the following packages:
-flask = "*"
-rtree = "*"
-fiona = "*"
-geopandas = "*"
-matplotlib = "*"
-pyshp = "*"
-pandas = "*"
-folium = "*"
-pathlib = "*"
-rasterio = "==1.0a12"
-numpy = "*"
-requests = "*"
-regex = "*"
-"beautifulsoup4" = "*"
+	flask = "*"
+	rtree = "*"
+	fiona = "*"
+	geopandas =	 "*"
+	matplotlib = "*"
+	pyshp = "*"
+	pandas = "*"
+	folium = "*"
+	pathlib = "*"
+	rasterio = "==1.0a12"
+	numpy = "*"
+	requests = "*"
+	regex = "*"
+	"beautifulsoup4" = "*"
 
 	'''
 Install Anaconda (REQUIRED TO INSTALL CARTOPY)
